@@ -1,18 +1,13 @@
 //Importing sound effects
-const introMusic = new Audio("./music/introSong.mp3");
+const introMusic = new Audio("./music/music_introSong1.mp3");
 const shootingSound = new Audio("./music/music_shooting.mp3");
 const killEnemySound = new Audio("./music/music_killEnemy.mp3");
 const gameOverSound = new Audio("./music/music_gameOver.mp3");
 const heavyWeaponSound = new Audio("./music/music_heavyWeapon.mp3");
 const specialWeaponSound = new Audio("./music/specialWeapon.wav");
+const backgroundMusic = new Audio("./music/music_background.mp3");
 
-//-- Images
-// const bulletImg = new Image();
-// bulletImg.add('load', function(){}, false);
-// bulletImg.src = './ images / bullet.png';
-//--
-
-// introMusic.play();
+introMusic.play();
 // Basic Environment setup
 const canvas = document.createElement("canvas");
 document.querySelector(".myGame").appendChild(canvas);
@@ -35,6 +30,13 @@ document.querySelector("input").addEventListener("click", (e) => {
     //Sropping intro music
     introMusic.pause();
 
+    //Background music while playing the game
+    backgroundMusic.play();
+    // function enableLoop() {
+    //     backgroundMusic.loop = true;
+    //     backgroundMusic.load();
+    // }
+    // enableLoop();
     // making form invisible
     form.style.display = "none";
     //making scoreBoard visible
@@ -377,6 +379,7 @@ function animation() {
             shootingSound.pause();
             heavyWeaponSound.pause();
             killEnemySound.pause();
+            backgroundMusic.pause();
             return gameoverLoader();
         }
 

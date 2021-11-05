@@ -7,12 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="./images/rocket.png" type="image/x-icon">
     <link rel="stylesheet" href="./style.css">
-    <title>Game</title>
+    <title>HTML-Canvas-SHooting-Game</title>
 </head>
 
 <body>
-    &copy; Harsh Vardhan || Sroll down fully || 1.left-click primary weapon 2.Right-click heavy weapon 3.Spacebar
-    special weapon
+    <b>Press F11 to play to do full screen and enjoy the game. Controls: Left click, Right click and Spacebar</b>
     <div class="scoreBoard">Score: 0</div>
     <form action="">
         <select name="" id="difficulty">
@@ -30,6 +29,15 @@
         integrity="sha512-eP6ippJojIKXKO8EPLtsUMS+/sAGHGo1UN/38swqZa1ypfcD4I0V/ac5G3VzaHfDaklFmQLEs51lhkkVaqg60Q=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="./index.js"></script>
+    <script>
+        if (window.innerWidth < 500) {
+            alert("Really Sorry! Please play on your laptop/desktop!");
+            alert("This screen will close in 5 secs!"); '
+            setTimeout(() => {
+                window.close();
+            }, 6000)
+        }
+    </script>
 </body>
 
 </html>
