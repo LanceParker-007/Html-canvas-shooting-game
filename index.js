@@ -6,7 +6,13 @@ const gameOverSound = new Audio("./music/music_gameOver.mp3");
 const heavyWeaponSound = new Audio("./music/music_heavyWeapon.mp3");
 const specialWeaponSound = new Audio("./music/specialWeapon.wav");
 
-introMusic.play();
+//-- Images
+// const bulletImg = new Image();
+// bulletImg.add('load', function(){}, false);
+// bulletImg.src = './ images / bullet.png';
+//--
+
+// introMusic.play();
 // Basic Environment setup
 const canvas = document.createElement("canvas");
 document.querySelector(".myGame").appendChild(canvas);
@@ -15,7 +21,6 @@ canvas.height = innerHeight;
 const context = canvas.getContext("2d");
 const lightWeaponDamage = 10;
 const heavyWeaponDamage = 20;
-
 let difficulty = 2;
 const form = document.querySelector("form");
 const scoreBoard = document.querySelector(".scoreBoard");
@@ -27,6 +32,9 @@ let playerScore = 0;
 document.querySelector("input").addEventListener("click", (e) => {
     e.preventDefault();
 
+    //Sropping intro music
+    introMusic.pause();
+
     // making form invisible
     form.style.display = "none";
     //making scoreBoard visible
@@ -34,10 +42,6 @@ document.querySelector("input").addEventListener("click", (e) => {
 
     //getting difficulty selected by user
     const userValue = document.getElementById("difficulty").value;
-
-
-    //Sropping intro music
-    introMusic.pause();
 
     if (userValue === "Easy") {
         setInterval(spawnEnemy, 2000);
@@ -64,18 +68,20 @@ const gameoverLoader = () => {
     const gameOverBtn = document.createElement("button");
     const highScore = document.createElement("div");
 
-    highScore.innerHTML = `High Score: ${localStorage.getItem("highScore") ? localStorage.getItem("highScore") : playerScore}`;
+    highScore.innerHTML = `High Score: ${localStorage.getItem("highScore")
+        ? localStorage.getItem("highScore")
+        : playerScore
+        }`;
 
+    const OfficialHighScore =
+        localStorage.getItem("highScore") && localStorage.getItem("highScore");
 
-    const OfficialHighScore = localStorage.getItem("highScore") && localStorage.getItem("highScore");
     if (OfficialHighScore < playerScore) {
         localStorage.setItem("highScore", playerScore);
 
         //updating high score html
         highScore.innerHTML = `High Score: ${playerScore}`;
     }
-
-
 
     // adding text to to playagain button
     gameOverBtn.innerText = "PLAY AGAIN";
@@ -96,7 +102,7 @@ const gameoverLoader = () => {
 
 //-------------Create Player, Weapon, Enemy Classes---------------
 
-// Setting playre position at center
+// Setting player position at center
 playerPosition = {
     x: canvas.width / 2,
     y: canvas.height / 2
@@ -128,6 +134,7 @@ class Player {
 }
 
 // Shooting weapon class
+
 class Weapon {
     constructor(x, y, radius, color, velocity, damage) {
         this.x = x;
@@ -160,6 +167,7 @@ class Weapon {
 }
 
 // Special weapon class
+
 class SpecialWeapon {
     constructor(x, y) {
         this.x = x;
@@ -170,8 +178,7 @@ class SpecialWeapon {
     draw() {
         context.beginPath();
         context.fillStyle = this.color; // Beacause this was put after first one was coming white
-        context.fillRect(this.x, this.y, 200, canvas.height);
-        // context.fill(); and we don't need this then because fillrect is doing this
+        context.fillRect(this.x, this.y, 200, canvas.height); // context.fill(); and we don't need this then because fillrect is doing this
     }
 
     update() {
@@ -183,11 +190,11 @@ class SpecialWeapon {
 // Enemy class
 
 class Enemy {
-    constructor(x, y, radius, ecolor, velocity) {
+    constructor(x, y, radius, color, velocity) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.color = ecolor;
+        this.color = color;
         this.velocity = velocity;
     }
 
@@ -207,19 +214,18 @@ class Enemy {
 
     update() {
         this.draw();
-        this.x += this.velocity.x;
-        this.y += this.velocity.y;
+        (this.x += this.velocity.x), (this.y += this.velocity.y);
     }
 }
 
 // enemy-particle class
-const friction = 0.97;
+const friction = 0.98;
 class Particle {
-    constructor(x, y, radius, ecolor, velocity) {
+    constructor(x, y, radius, color, velocity) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.color = ecolor;
+        this.color = color;
         this.velocity = velocity;
         this.alpha = 1;
     }
@@ -227,7 +233,6 @@ class Particle {
     draw() {
         context.save();
         context.globalAlpha = this.alpha;
-
         context.beginPath();
         context.arc(
             this.x,
@@ -246,12 +251,12 @@ class Particle {
         this.draw();
         this.velocity.x *= friction;
         this.velocity.y *= friction;
+
         this.x += this.velocity.x;
         this.y += this.velocity.y;
         this.alpha -= 0.01;
     }
 }
-
 
 // --------------Main Logic Start---------------------
 
@@ -264,12 +269,10 @@ const particles = [] // particles array
 
 // Enemy spawn at random location function
 const spawnEnemy = () => {
-
     // genrating random size size of enemy
-    const enemySize = Math.random() * (40 - 5) + 5;
-
+    const enemySize = Math.random() * (35 - 5) + 5;
     // generating random color for enemy
-    const enemyColor = `hsl(${Math.floor(Math.random() * 360)}, 100 %, 50 %)`;
+    const enemyColor = `hsl(${Math.floor(Math.random() * 360)},100%,50%)`;
 
     // random position where enemy spawn
     let random;
@@ -302,9 +305,9 @@ const spawnEnemy = () => {
     };
 
     // Adding enemy to enemies array
-    let newEnemy = new Enemy(random.x, random.y, enemySize, enemyColor, velocity);
+    const newEnemy = new Enemy(random.x, random.y, enemySize, enemyColor, velocity);
     enemies.push(newEnemy);
-}
+};
 
 //-------------------------------------------- Creating animation function----------------------------------------------------
 let animationId;
@@ -315,10 +318,11 @@ function animation() {
     // Updating html score board
     scoreBoard.innerHTML = `Score: ${playerScore} `;
 
-
     // Clearing canvas on each frame
     context.fillStyle = 'rgba(49,49,49,0.2)'
+
     context.fillRect(0, 0, canvas.width, canvas.height);
+
     // Drawing player
     harsh.draw();
 
@@ -329,8 +333,7 @@ function animation() {
         } else {
             particle.update();
         }
-    })
-
+    });
 
     // Genrating specialWeapon
     specialWeapons.forEach((specialWeapon, specialWeaponIndex) => {
@@ -339,13 +342,11 @@ function animation() {
         } else {
             specialWeapon.update();
         }
-
     });
 
     // Generating shooting weapon bullets
     weapons.forEach((weapon, weaponIndex) => { // working wI ?? 
         weapon.update();
-
 
         // Removing weapons as they move out of the screen
         if (
@@ -372,6 +373,10 @@ function animation() {
         if (distanceBetweenPlayerAndEnemy - harsh.radius - enemy.radius < 1) {
             cancelAnimationFrame(animationId);
             gameOverSound.play();
+            specialWeaponSound.pause();
+            shootingSound.pause();
+            heavyWeaponSound.pause();
+            killEnemySound.pause();
             return gameoverLoader();
         }
 
@@ -379,25 +384,28 @@ function animation() {
             // Distance between specialWeapon and Enemy
             const distanceBetweenSpecialWeaponAndEnemy = specialWeapon.x - enemy.x;
 
-            if (distanceBetweenSpecialWeaponAndEnemy <= 200 && distanceBetweenSpecialWeaponAndEnemy >= -200) {
+            if (
+                distanceBetweenSpecialWeaponAndEnemy <= 200 &&
+                distanceBetweenSpecialWeaponAndEnemy >= -200
+            ) {
                 //increasing playerScore when killing enemy && removing enemy
                 playerScore += 10;
                 setTimeout(() => {
                     killEnemySound.play();
                     enemies.splice(enemyIndex, 1);
-                }, 0)
-
+                }, 0);
             }
-        })
+        });
 
         weapons.forEach((weapon, weaponIndex) => {
-
             //Finding distance between weapon and enemy
             const distanceBetweenWeaponAndEnemy = Math.hypot(
                 weapon.x - enemy.x,
                 weapon.y - enemy.y
             );
+
             if (distanceBetweenWeaponAndEnemy - weapon.radius - enemy.radius < 1) {
+                killEnemySound.play();
 
                 //Reducing size of enemy on hit if size is greater than 18
                 if (enemy.radius > weapon.damage + 8) {
@@ -410,7 +418,7 @@ function animation() {
                 }
                 // Removing the enemies if size is less than 18
                 else {
-                    for (let i = 0; i < enemy.radius; i++) {
+                    for (let i = 0; i < enemy.radius * 2; i++) {
                         particles.push(new Particle(weapon.x, weapon.y, Math.random() * 2, enemy.color,
                             {
                                 x: (Math.random() - 0.5) * (Math.random() * 7),
@@ -418,7 +426,6 @@ function animation() {
                             })
                         );
                     }
-
                     //increasing playerScore when killing enemy && removing enemy and weapon both
                     playerScore += 10;
 
@@ -426,13 +433,12 @@ function animation() {
                     scoreBoard.innerHTML = `Score: ${playerScore} `;
 
                     setTimeout(() => {
-                        killEnemySound.play();
                         enemies.splice(enemyIndex, 1);
                         weapons.splice(weaponIndex, 1);
                     }, 0);
                 }
             }
-        })
+        });
     });
 }
 
@@ -455,7 +461,7 @@ canvas.addEventListener("click", (e) => {
     };
 
     // Adding light weapon in weapons array
-    let weaponProjectile = new Weapon(canvas.width / 2, canvas.height / 2, 7, "white", velocity, lightWeaponDamage);
+    const weaponProjectile = new Weapon(canvas.width / 2, canvas.height / 2, 7, "white", velocity, lightWeaponDamage);
     weapons.push(weaponProjectile);
     // console.log('Light Weapon');
 });
@@ -486,7 +492,7 @@ canvas.addEventListener("contextmenu", (e) => {
     };
 
     // Adding light weapon in weapons array
-    let weaponProjectile = new Weapon(canvas.width / 2, canvas.height / 2, 15, "white", velocity, heavyWeaponDamage);
+    const weaponProjectile = new Weapon(canvas.width / 2, canvas.height / 2, 15, "cyan", velocity, heavyWeaponDamage);
     weapons.push(weaponProjectile);
     // console.log('Heelo');
 });
@@ -495,13 +501,14 @@ window.addEventListener("keypress", (e) => {
     if (e.key === " ") {
         if (playerScore <= 30) return;
 
-        specialWeaponSound.play();
         // Decreasing player score in html score board
         playerScore -= 30;
         // Updating html score board
         scoreBoard.innerHTML = `Score: ${playerScore} `;
 
-        let specialWeapon = new SpecialWeapon(0, 0);
+        specialWeaponSound.play();
+
+        const specialWeapon = new SpecialWeapon(0, 0);
         specialWeapons.push(specialWeapon);
     }
 });
