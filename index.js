@@ -476,7 +476,7 @@ canvas.addEventListener("contextmenu", (e) => {
     heavyWeaponSound.play();
 
     // Decreasing player score in html score board
-    playerScore -= 2;
+    playerScore -= 5;
     // Updating html score board
     scoreBoard.innerHTML = `Score: ${playerScore} `;
     //finding angle between player position(center) and click co-ordinates
